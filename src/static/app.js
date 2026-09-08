@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
+  const themeToggleButton = document.getElementById("theme-toggle");
 
   // Activity categories with corresponding colors
   const activityTypes = {
@@ -43,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+  const THEME_STORAGE_KEY = "theme";
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -115,6 +117,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Set authentication class on body
     updateAuthBodyClass();
+  }
+
+  // Apply and persist theme choice
+  function applyTheme(theme) {
+    document.body.setAttribute("data-theme", theme);
+    themeToggleButton.textContent =
+      theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }
+
+  // Initialize theme from saved preference
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    applyTheme(savedTheme === "dark" ? "dark" : "light");
   }
 
   // Validate user session with the server
@@ -861,7 +877,13 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeRangeFilter,
   };
 
+  themeToggleButton.addEventListener("click", () => {
+    const currentTheme = document.body.getAttribute("data-theme");
+    applyTheme(currentTheme === "dark" ? "light" : "dark");
+  });
+
   // Initialize app
+  initializeTheme();
   checkAuthentication();
   initializeFilters();
   fetchActivities();
