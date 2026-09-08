@@ -498,6 +498,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const shareText = `Check out ${name} at Mergington High School: ${formattedSchedule}`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}#activity-${encodeURIComponent(
+      name
+    )}`;
+    const encodedShareText = encodeURIComponent(shareText);
+    const encodedShareUrl = encodeURIComponent(shareUrl);
+    const encodedEmailSubject = encodeURIComponent(
+      `${name} at Mergington High School`
+    );
+    const encodedEmailBody = encodeURIComponent(`${shareText}\n${shareUrl}`);
 
     // Create activity tag
     const tagHtml = `
@@ -553,21 +563,28 @@ document.addEventListener("DOMContentLoaded", () => {
         </ul>
       </div>
       <div class="activity-card-actions">
-        ${
-          currentUser
-            ? `
-          <button class="register-button" data-activity="${name}" ${
-                isFull ? "disabled" : ""
-              }>
-            ${isFull ? "Activity Full" : "Register Student"}
-          </button>
-        `
-            : `
-          <div class="auth-notice">
-            Teachers can register students.
-          </div>
-        `
-        }
+        <div class="primary-action">
+          ${
+            currentUser
+              ? `
+            <button class="register-button" data-activity="${name}" ${
+                  isFull ? "disabled" : ""
+                }>
+              ${isFull ? "Activity Full" : "Register Student"}
+            </button>
+          `
+              : `
+            <div class="auth-notice">
+              Teachers can register students.
+            </div>
+          `
+          }
+        </div>
+        <div class="share-buttons">
+          <a class="share-button" href="https://twitter.com/intent/tweet?text=${encodedShareText}&url=${encodedShareUrl}" target="_blank" rel="noopener noreferrer">Share on X</a>
+          <a class="share-button" href="https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}" target="_blank" rel="noopener noreferrer">Share on Facebook</a>
+          <a class="share-button" href="mailto:?subject=${encodedEmailSubject}&body=${encodedEmailBody}">Share by Email</a>
+        </div>
       </div>
     `;
 
